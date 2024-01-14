@@ -1,11 +1,11 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Configure kickstart",
-    "$id": "http://nethserver.org/json-schema/task/input/kickstart/configure-module",
-    "description": "Configure kickstart",
+    "title": "Configure stirlingpdf",
+    "$id": "http://nethserver.org/json-schema/task/input/stirlingpdf/configure-module",
+    "description": "Configure stirlingpdf",
     "examples": [
         {
-            "host": "kickstart.domain.org",
+            "host": "stirlingpdf.domain.org",
             "http2https": true,
             "lets_encrypt": true
         }
@@ -19,7 +19,7 @@
     "properties": {
         "host": {
             "type": "string",
-            "description": "Host name for the application, like 'kickstart.domain.org'",
+            "description": "Host name for the application, like 'stirlingpdf.domain.org'",
             "format": "idn-hostname"
         },
         "lets_encrypt": {
@@ -31,6 +31,16 @@
             "type": "boolean",
             "title": "HTTP to HTTPS redirection",
             "description": "Redirect all the HTTP requests to HTTPS"
+        },
+        "docker_enable_security": {
+            "type": "boolean",
+            "title": "Docker enable Security",
+            "description": "Allow for confgiruation of password"
+        },
+        "security_enablelogin": {
+            "type": "boolean",
+            "title": "Security Enable Login",
+            "description": "Enable Password Login"
         }
     }
 }

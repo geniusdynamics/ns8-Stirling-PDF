@@ -31,6 +31,16 @@
             "type": "boolean",
             "title": "HTTP to HTTPS redirection",
             "description": "Redirect all the HTTP requests to HTTPS"
+        },
+        "docker_enable_security": {
+            "type": "boolean",
+            "title": "Docker enable Security",
+            "description": "Allow for confgiruation of password"
+        },
+        "security_enablelogin": {
+            "type": "boolean",
+            "title": "Security Enable Login",
+            "description": "Enable Password Login"
         }
     }
 }

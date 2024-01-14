@@ -24,8 +24,8 @@
         <cv-tile light>
           <cv-form @submit.prevent="configureModule">
             <cv-text-input
-              :label="$t('settings.kickstart_fqdn')"
-              placeholder="kickstart.example.org"
+              :label="$t('settings.stirling_fqdn')"
+              placeholder="stirling.example.org"
               v-model.trim="host"
               class="mg-bottom"
               :invalid-message="$t(error.host)"
@@ -51,6 +51,20 @@
               value="httpToHttps"
               :label="$t('settings.http_to_https')"
               v-model="isHttpToHttpsEnabled"
+              :disabled="loading.getConfiguration || loading.configureModule"
+              class="mg-bottom"
+            >
+              <template slot="text-left">{{
+                $t("settings.disabled")
+              }}</template>
+              <template slot="text-right">{{
+                $t("settings.enabled")
+              }}</template>
+            </cv-toggle>
+                        <cv-toggle
+              value="docker_enable_security"
+              :label="$t('settings.enable_security')"
+              v-model="isSecurityEnabled"
               :disabled="loading.getConfiguration || loading.configureModule"
               class="mg-bottom"
             >
@@ -124,6 +138,7 @@ export default {
       urlCheckInterval: null,
       host: "",
       isLetsEncryptEnabled: false,
+      isLetsSecurityEnabled: false,
       isHttpToHttpsEnabled: true,
       loading: {
         getConfiguration: false,
@@ -201,6 +216,7 @@ export default {
       const config = taskResult.output;
       this.host = config.host;
       this.isLetsEncryptEnabled = config.lets_encrypt;
+      this.isSecurityEnabled = config.docker_enable_security;
       this.isHttpToHttpsEnabled = config.http2https;
 
       this.loading.getConfiguration = false;
@@ -270,6 +286,7 @@ export default {
           data: {
             host: this.host,
             lets_encrypt: this.isLetsEncryptEnabled,
+            docker_enable_security: this.isSecurityEnabled,
             http2https: this.isHttpToHttpsEnabled,
           },
           extra: {

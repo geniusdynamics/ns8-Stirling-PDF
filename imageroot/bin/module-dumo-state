@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+set -e
+
+echo "Dumping stirlingpdf postgres database"
+podman exec stirlingpdf-spdf spdf_dump -U stirlingpdf --format=c  stirlingpdf > stirlingpdf.spdf_dump

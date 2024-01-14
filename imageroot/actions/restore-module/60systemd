@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/bin/bash
 
 #
 # Copyright (C) 2022 Nethesis S.r.l.
@@ -20,27 +20,10 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-import sys
-import json
-import agent
+set -e
 
-request = json.load(sys.stdin)
+# Redirect any output to the journal (stderr)
+exec 1>&2
 
-original_environment = request['environment']
-
-for evar in [
-        "TRAEFIK_HOST",
-        "TRAEFIK_HTTP2HTTPS",
-        "TRAEFIK_LETS_ENCRYPT",
-        "SYSTEM_DEFAULTLOCALE",
-        "UI_APPNAME",
-        "UI_HOMEDESCRIPTION",
-        "UI_APPNAMENAVBAR",
-        "SYSTEM_MAXFILESIZE",
-        "METRICS_ENABLED",
-        "SYSTEM_GOOGLEVISIBILITY",
-        "DOCKER_ENABLE_SECURITY",
-        "SECURITY_ENABLELOGIN",
-
-    ]:
-    agent.set_env(evar, original_environment[evar])
+# Enable and restart the service
+systemctl --user enable --now stirling-pdf.service

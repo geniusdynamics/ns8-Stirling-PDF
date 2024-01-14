@@ -1,0 +1,34 @@
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+#
+# This systemd unit starts a stirling-pdf instance using Podman.
+# Most parts of this file come from podman-generate-systemd.
+#
+
+[Unit]
+Description=Podman stirling-pdf.service
+Requires=stirling-pdf-app.service
+Before=stirling-pdf-app.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=-%S/state/environment
+Restart=always
+TimeoutStopSec=70
+ExecStartPre=/bin/rm -f %t/stirling-pdf.pid %t/stirling-pdf.pod-id
+ExecStartPre=/usr/bin/podman pod create --infra-conmon-pidfile %t/stirling-pdf.pid \
+    --pod-id-file %t/stirling-pdf.pod-id \
+    --name stirling-pdf \
+    --publish 127.0.0.1:${TCP_PORT}:8254 \
+    --replace
+ExecStart=/usr/bin/podman pod start --pod-id-file %t/stirling-pdf.pod-id
+ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/stirling-pdf.pod-id -t 10
+ExecStopPost=/usr/bin/podman pod rm --ignore -f --pod-id-file %t/stirling-pdf.pod-id
+PIDFile=%t/stirling-pdf.pid
+Type=forking
+
+[Install]
+WantedBy=default.target
