@@ -32,12 +32,12 @@ To start a new module from it:
 
 Instantiate the module with:
 
-    add-module ghcr.io/nethserver/kickstart:latest 1
+    add-module ghcr.io/compgeniuses/stirlingpdf:latest 1
 
 The output of the command will return the instance name.
 Output example:
 
-    {"module_id": "kickstart1", "image_name": "kickstart", "image_url": "ghcr.io/nethserver/kickstart:latest"}
+    {"module_id": "stirlingpdf", "image_name": "stirlingpdf", "image_url": "ghcr.io/compgeniuses/stirlingpdf:latest"}
 
 ## Configure
 
@@ -52,9 +52,9 @@ Launch `configure-module`, by setting the following parameters:
 Example:
 
 ```
-api-cli run configure-module --agent module/kickstart1 --data - <<EOF
+api-cli run configure-module --agent module/stirlingpdf1 --data - <<EOF
 {
-  "host": "kickstart.domain.com",
+  "host": "stirlingpdf.domain.com",
   "http2https": true,
   "lets_encrypt": false
 }
@@ -69,14 +69,14 @@ The above command will:
 You can retrieve the configuration with
 
 ```
-api-cli run get-configuration --agent module/kickstart1
+api-cli run get-configuration --agent module/stirlingpdf1
 ```
 
 ## Uninstall
 
 To uninstall the instance:
 
-    remove-module --no-preserve kickstart1
+    remove-module --no-preserve stirlingpdf1
 
 ## Smarthost setting discovery
 
