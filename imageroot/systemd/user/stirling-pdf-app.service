@@ -30,9 +30,9 @@ ExecStart=/usr/bin/podman run --conmon-pidfile %t/stirling-pdf-app.pid \
     --env SYSTEM_DEFAULTLOCALE=en_US \
     --env DOCKER_ENABLE_SECURITY=false \
     --env SECURITY_ENABLELOGIN=false \
-    --volume ./stirling-pdf/data:/usr/share/tesseract-ocr/5/tessdata:rw
-    --volume ./stirling-pdf/config:/configs:rw
-    --volume ./stirling-pdf/logs:/logs:rw
+    --volume=stirling-pdf/data:/usr/share/tesseract-ocr/5/tessdata:rw
+    --volume=stirling-pdf/config:/configs:rw
+    --volume=stirling-pdf/logs:/logs:rw
     ${S_PDF_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/stirling-pdf-app.ctr-id -t 10
 ExecReload=/usr/bin/podman kill -s HUP stirling-pdf-app
