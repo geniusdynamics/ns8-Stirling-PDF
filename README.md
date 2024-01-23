@@ -46,8 +46,12 @@ Launch `configure-module`, by setting the following parameters:
 - `host`: a fully qualified domain name for the application
 - `http2https`: enable or disable HTTP to HTTPS redirection (true/false)
 - `lets_encrypt`: enable or disable Let's Encrypt certificate (true/false)
+- `docker_enable_security`: Define if the app will have a password (true/false)
+- `security_enablelogin`: Define if the app will have a password (true/false)
+- `security_initiallogin_username`:  define the initial username , if enable login is defined
+- `security_initiallogin_password`: define initial password
 
-## Default COnfig
+## Default COnfig if enable login is enabled
 USername: admin
 PAssword: stirling
 
@@ -72,6 +76,13 @@ You can retrieve the configuration with
 
 ```
 api-cli run get-configuration --agent module/stirlingpdf1
+```
+
+## Update Module
+You can retrieve the configuration with
+
+```
+api-cli run update-module --data '{"module_url":"ghcr.io/compgeniuses/stirlingpdf:latest","instances":["stirlingpdf1"],"force":true}
 ```
 
 ## Uninstall
