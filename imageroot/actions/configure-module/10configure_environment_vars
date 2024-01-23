@@ -18,7 +18,7 @@ data = json.load(sys.stdin)
 # agent.set_env("DOCKER_ENABLE_SECURITY", data["docker_enable_security"])
 # agent.set_env("SECURITY_ENABLELOGIN", data["security_enablelogin"])
 agent.set_env("DOCKER_ENABLE_SECURITY", data.get("docker_enable_security",False))
-agent.set_env("SECURITY_ENABLELOGIN", data.get("security_enablelogin"False))
+agent.set_env("SECURITY_ENABLELOGIN", data.get("security_enablelogin",False))
 
 # agent.set_env("SECURITY_INITIALLOGIN_USERNAME", data["security_initiallogin_username"])
 # agent.set_env("SECURITY_INITIALLOGIN_PASSWORD", data["security_initiallogin_password"])
