@@ -6,7 +6,7 @@
 [Unit]
 Description=Podman  stirling-pdf-app.service
 BindsTo=stirling-pdf.service
-After=stirling-pdf.service mariadb-app.service
+After=stirling-pdf.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
