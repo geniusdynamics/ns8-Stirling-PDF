@@ -22,7 +22,7 @@ ExecStartPre=/bin/rm -f %t/stirling-pdf.pid %t/stirling-pdf.pod-id
 ExecStartPre=/usr/bin/podman pod create --infra-conmon-pidfile %t/stirling-pdf.pid \
     --pod-id-file %t/stirling-pdf.pod-id \
     --name stirling-pdf \
-    --publish 127.0.0.1:${TCP_PORT}:8254 \
+    --publish 127.0.0.1:${TCP_PORT}:8080 \
     --replace
 ExecStart=/usr/bin/podman pod start --pod-id-file %t/stirling-pdf.pod-id
 ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/stirling-pdf.pod-id -t 10
