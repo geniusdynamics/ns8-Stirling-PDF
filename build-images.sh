@@ -14,7 +14,7 @@ images=()
 repobase="${REPOBASE:-ghcr.io/compgeniuses}"
 # Configure the image name
 reponame="stirlingpdf"
-
+SPDF_TAG="v0.21.0"
 # Create a new empty container image
 container=$(buildah from scratch)
 
@@ -45,7 +45,7 @@ buildah config --entrypoint=/ \
     --label="org.nethserver.authorizations=traefik@node:routeadm" \
     --label="org.nethserver.tcp-ports-demand=1" \
     --label="org.nethserver.rootfull=0" \
-    --label="org.nethserver.images=docker.io/frooodle/s-pdf:latest" \
+    --label="org.nethserver.images=docker.io/frooodle/s-pdf:${SPDF_TAG}" \
     "${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
