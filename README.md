@@ -36,7 +36,7 @@ Instantiate the module with:
 The output of the command will return the instance name.
 Output example:
 
-    {"module_id": "kickstart1", "image_name": "kickstart", "image_url": "ghcr.io/nethserver/kickstart:latest"}
+    {"module_id": "Stilingpdf1", "image_name": "Stilingpdf", "image_url": "ghcr.io/nethserver/Stilingpdf:latest"}
 
 ## Configure
 
