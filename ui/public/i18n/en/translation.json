@@ -31,7 +31,7 @@
     "disabled": "Disabled",
     "advanced": "Advanced",
     "configuring": "Configuring",
-    "instance_configuration": "Configure kickstart",
+    "instance_configuration": "Configure Stirling-PDF",
     "domain_already_used_in_traefik": "Domain already used in traefik"
   },
   "about": {
