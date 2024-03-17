@@ -14,7 +14,7 @@ images=()
 repobase="${REPOBASE:-ghcr.io/compgeniuses}"
 # Configure the image name
 reponame="stirlingpdf"
-SPDF_TAG="0.22.1"
+SPDF_TAG="0.22.3"
 # Create a new empty container image
 container=$(buildah from scratch)
 
