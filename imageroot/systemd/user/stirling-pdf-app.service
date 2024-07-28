@@ -21,15 +21,7 @@ ExecStartPre=-runagent discover-smarthost
 ExecStart=/usr/bin/podman run --conmon-pidfile %t/stirling-pdf-app.pid \
     --cidfile %t/stirling-pdf-app.ctr-id --cgroups=no-conmon \
     --pod-id-file %t/stirling-pdf.pod-id --replace -d --name  stirling-pdf-app \
-    --env SYSTEM_GOOGLEVISIBILITY=false \
-    --env METRICS_ENABLED=true \
-    --env SYSTEM_MAXFILESIZE=128 \
-    --env UI_APPNAMENAVBAR=Stirling-PDF \
-    --env UI_HOMEDESCRIPTION=Stirling-PDF \
-    --env UI_APPNAME=Stirling-PDF \
-    --env SYSTEM_DEFAULTLOCALE=en_US \
-    --env DOCKER_ENABLE_SECURITY=false \
-    --env SECURITY_ENABLELOGIN=false \
+    --env-file=%S/state/app-config.env \
     --volume=stirling-pdf-data:/usr/share/tesseract-ocr/5/tessdata \
     --volume=stirling-pdf-config:/configs \
     --volume=stirling-pdf-logs:/logs \
