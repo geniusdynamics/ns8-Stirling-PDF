@@ -22,11 +22,12 @@ ExecStart=/usr/bin/podman run --conmon-pidfile %t/stirling-pdf-app.pid \
     --cidfile %t/stirling-pdf-app.ctr-id --cgroups=no-conmon \
     --pod-id-file %t/stirling-pdf.pod-id --replace -d --name  stirling-pdf-app \
     --env-file=%S/state/app-config.env \
-    --volume=stirling-pdf-data:/usr/share/tesseract-ocr/5/tessdata \
-    --volume=stirling-pdf-config:/configs \
-    --volume=stirling-pdf-logs:/logs \
-    --volume=stirling-pdf-customFiles:/customFiles \
-    ${S_PDF_IMAGE}
+    --volume=stirling-pdf-data:/usr/share/tessdata:Z \
+    --volume=stirling-pdf-config:/configs/:Z \
+    --volume=stirling-pdf-logs:/logs/:Z \
+    --volume=stirling-pdf-customFiles:/customFiles/:Z \
+    --volume=stirling-pdf-pipeline:/pipeline/:Z \
+    ${STIRLING_PDF_IMAGE}
 ExecStop=/usr/bin/podman stop --ignore --cidfile %t/stirling-pdf-app.ctr-id -t 10
 ExecReload=/usr/bin/podman kill -s HUP stirling-pdf-app
 SyslogIdentifier=%u

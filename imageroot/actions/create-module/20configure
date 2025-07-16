@@ -7,6 +7,7 @@
 import os
 import json
 import sys
+
 # agent is a NethServer library which provides function to communicate with the agent
 import agent
 import secrets
@@ -14,15 +15,14 @@ import secrets
 data = json.load(sys.stdin)
 
 # Setup default values
-random_key = secrets.token_hex(16)
 
 
 # Other, Default Environments
-agent.set_env("SYSTEM_DEFAULTLOCALE",data.get("system_defaultlocale","en_US"))
-agent.set_env("UI_APPNAME",data.get("ui_appname","Stirling-PDF"))
-agent.set_env("UI_HOMEDESCRIPTION",data.get("ui_homedescription","site for Stirling-PDF"))
-agent.set_env("UI_APPNAMENAVBAR",data.get("ui_appnamenavbar","Stirling-PDF"))
-agent.set_env("SYSTEM_MAXFILESIZE",data.get("system_maxfilesize",128))
-agent.set_env("METRICS_ENABLED",data.get("metrics_enabled",False))
-agent.set_env("SYSTEM_GOOGLEVISIBILITY",data.get("system_googlevisibility",False))
+# agent.set_env("SYSTEM_DEFAULTLOCALE",data.get("system_defaultlocale","en_US"))
+# agent.set_env("UI_APPNAME",data.get("ui_appname","Stirling-PDF"))
+# agent.set_env("UI_HOMEDESCRIPTION",data.get("ui_homedescription","site for Stirling-PDF"))
+# agent.set_env("UI_APPNAMENAVBAR",data.get("ui_appnamenavbar","Stirling-PDF"))
+# agent.set_env("SYSTEM_MAXFILESIZE",data.get("system_maxfilesize",128))
+# agent.set_env("METRICS_ENABLED",data.get("metrics_enabled",False))
+# agent.set_env("SYSTEM_GOOGLEVISIBILITY",data.get("system_googlevisibility",False))
 agent.dump_env()
