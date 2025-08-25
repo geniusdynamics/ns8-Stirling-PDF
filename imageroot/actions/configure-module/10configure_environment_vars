@@ -15,16 +15,21 @@ data = json.load(sys.stdin)
 
 
 # Configurable Settings
-# agent.set_env("DOCKER_ENABLE_SECURITY", data["docker_enable_security"])
-# agent.set_env("SECURITY_ENABLELOGIN", data["security_enablelogin"])
-# agent.set_env("DOCKER_ENABLE_SECURITY", data.get("docker_enable_security",False))
-# agent.set_env("SECURITY_ENABLELOGIN", data.get("security_enablelogin",False))
 
-# agent.set_env("SECURITY_INITIALLOGIN_USERNAME", data["security_initiallogin_username"])
-# agent.set_env("SECURITY_INITIALLOGIN_PASSWORD", data["security_initiallogin_password"])
+app_config = {
+    "SYSTEM_GOOGLEVISIBILITY": "false",
+    "METRICS_ENABLED": "true",
+    "SYSTEM_MAXFILESIZE": "128",
+    "UI_APPNAMENAVBAR": "Stirling-PDF",
+    "UI_HOMEDESCRIPTION": "Stirling-PDF",
+    "UI_APPNAME": "Stirling-PDF",
+    "SYSTEM_DEFAULTLOCALE": "en_US",
+    "DOCKER_ENABLE_SECURITY": "false",
+    "SECURITY_ENABLELOGIN": "false",
+    "DISABLE_ADDITIONAL_FEATURES": "false",
+}
+agent.write_env('app-config.env', app_config)
 
 
-
-# Make sure everything is saved inside the environment file
 # just before starting systemd unit
 agent.dump_env()
