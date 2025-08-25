@@ -26,6 +26,7 @@ app_config = {
     "SYSTEM_DEFAULTLOCALE": "en_US",
     "DOCKER_ENABLE_SECURITY": "false",
     "SECURITY_ENABLELOGIN": "false",
+    "DISABLE_ADDITIONAL_FEATURES": "false",
 }
 agent.write_env('app-config.env', app_config)
 
