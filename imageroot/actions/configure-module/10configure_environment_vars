@@ -28,8 +28,8 @@ app_config = {
     "SECURITY_ENABLELOGIN": "false",
     "DISABLE_ADDITIONAL_FEATURES": "false",
 }
-agent.write_env('app-config.env', app_config)
+agent.write_envfile('app-config.env', app_config)
 
 
 # just before starting systemd unit
-agent.dump_env()
+# agent.dump_env()
