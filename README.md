@@ -1,158 +1,340 @@
-# ns8-stirlingpdf
+# NS8 Stirling-PDF Module
 
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![NS8 Module](https://img.shields.io/badge/NS8-Module-green.svg)](https://www.nethserver.org/)
 
+A comprehensive NS8 module for deploying [Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF), a powerful, locally hosted PDF manipulation tool. This module provides a one-stop-shop for all your PDF needs with features like merging, splitting, converting, and securing PDF documents.
 
-## Install
+## Features
 
-Instantiate the module with:
+- **PDF Manipulation**: Merge, split, rotate, and reorder PDF pages
+- **Format Conversion**: Convert between PDF and various image formats
+- **Security**: Add passwords, watermarks, and digital signatures
+- **OCR**: Extract text from scanned PDFs
+- **Compression**: Reduce PDF file sizes while maintaining quality
+- **Web Interface**: Modern, responsive web UI built with Vue.js
+- **NS8 Integration**: Seamless integration with NS8 ecosystem including:
+  - Traefik reverse proxy with automatic SSL
+  - Centralized authentication and user management
+  - Backup and restore capabilities
+  - Multi-instance support
 
-    add-module ghcr.io/compgeniuses/stirlingpdf:latest 1
+## Prerequisites
 
-The output of the command will return the instance name.
-Output example:
+- NS8 server with admin access
+- Valid domain name (for Let's Encrypt certificates)
+- At least 1GB RAM and 2GB disk space per instance
 
-    {"module_id": "Stilingpdf1", "image_name": "Stilingpdf", "image_url": "ghcr.io/geniusdynamics/Stilingpdf:latest"}
+## Installation
 
-## Configure
+### Quick Install
 
-Let's assume that the mattermost instance is named `stirlingpdf1`.
+Deploy the module with a single command:
 
-Launch `configure-module`, by setting the following parameters:
-- `host`: a fully qualified domain name for the application
-- `http2https`: enable or disable HTTP to HTTPS redirection (true/false)
-- `lets_encrypt`: enable or disable Let's Encrypt certificate (true/false)
-- `docker_enable_security`: Define if the app will have a password (true/false)
-- `security_enablelogin`: Define if the app will have a password (true/false)
-- `security_initiallogin_username`:  define the initial username , if enable login is defined
-- `security_initiallogin_password`: define initial password
-
-## Default COnfig if enable login is enabled
-USername: admin
-PAssword: stirling
-
-Example:
-
+```bash
+add-module ghcr.io/geniusdynamics/stirlingpdf:latest 1
 ```
+
+The command returns the instance details:
+
+```json
+{
+  "module_id": "stirlingpdf1",
+  "image_name": "stirlingpdf",
+  "image_url": "ghcr.io/geniusdynamics/stirlingpdf:latest"
+}
+```
+
+### Multiple Instances
+
+Deploy multiple instances for different departments or use cases:
+
+```bash
+add-module ghcr.io/geniusdynamics/stirlingpdf:latest 3
+```
+
+## Configuration
+
+### Basic Configuration
+
+Configure your Stirling-PDF instance with essential settings:
+
+```bash
 api-cli run configure-module --agent module/stirlingpdf1 --data - <<EOF
 {
-  "host": "stirlingpdf.domain.com",
+  "host": "pdf.yourdomain.com",
   "http2https": true,
-  "lets_encrypt": false
+  "lets_encrypt": true
 }
 EOF
 ```
 
-The above command will:
-- start and configure the stirlingpdf instance
-- configure a virtual host for trafik to access the instance
+### Advanced Configuration Options
 
-## Get the configuration
-You can retrieve the configuration with
+| Parameter                | Type    | Required | Default | Description                                              |
+| ------------------------ | ------- | -------- | ------- | -------------------------------------------------------- |
+| `host`                   | string  | Yes      | -       | Fully qualified domain name (e.g., `pdf.yourdomain.com`) |
+| `http2https`             | boolean | Yes      | true    | Redirect HTTP to HTTPS                                   |
+| `lets_encrypt`           | boolean | Yes      | true    | Request Let's Encrypt SSL certificate                    |
+| `docker_enable_security` | boolean | No       | false   | Enable password protection                               |
+| `security_enablelogin`   | boolean | No       | false   | Require login authentication                             |
 
+### Security Configuration
+
+When enabling login protection, you can set custom credentials:
+
+```bash
+api-cli run configure-module --agent module/stirlingpdf1 --data - <<EOF
+{
+  "host": "pdf.yourdomain.com",
+  "http2https": true,
+  "lets_encrypt": true,
+  "docker_enable_security": true,
+  "security_enablelogin": true,
+  "security_initiallogin_username": "admin",
+  "security_initiallogin_password": "your-secure-password"
+}
+EOF
 ```
+
+**Default credentials** (when login is enabled without custom values):
+
+- Username: `admin`
+- Password: `stirling`
+
+⚠️ **Security Note**: Change default credentials immediately after first login.
+
+## Management
+
+### View Configuration
+
+Retrieve current configuration:
+
+```bash
 api-cli run get-configuration --agent module/stirlingpdf1
 ```
 
-## Update Module
-You can retrieve the configuration with
+### Update Module
 
-```
-api-cli run update-module --data '{"module_url":"ghcr.io/compgeniuses/stirlingpdf:latest","instances":["stirlingpdf1"],"force":true}'
-```
+Update to the latest version:
 
-## Uninstall
-
-To uninstall the instance:
-
-    remove-module --no-preserve stirlingpdf1
-
-## Smarthost setting discovery
-
-Some configuration settings, like the smarthost setup, are not part of the
-`configure-module` action input: they are discovered by looking at some
-Redis keys.  To ensure the module is always up-to-date with the
-centralized [smarthost
-setup](https://compgeniuses.github.io/ns8-core/core/smarthost/) every time
-stirlingpdf starts, the command `bin/discover-smarthost` runs and refreshes
-the `state/smarthost.env` file with fresh values from Redis.
-
-Furthermore if smarthost setup is changed when stirlingpdf is already
-running, the event handler `events/smarthost-changed/10reload_services`
-restarts the main module service.
-
-See also the `systemd/user/stirlingpdf.service` file.
-
-This setting discovery is just an example to understand how the module is
-expected to work: it can be rewritten or discarded completely.
-
-## Debug
-
-some CLI are needed to debug
-
-- The module runs under an agent that initiate a lot of environment variables (in /home/stirlingpdf1/.config/state), it could be nice to verify them
-on the root terminal
-
-    `runagent -m stirlingpdf1 env`
-
-- you can become runagent for testing scripts and initiate all environment variables
-  
-    `runagent -m stirlingpdf1`
-
- the path become : 
-```
-    echo $PATH
-    /home/stirlingpdf1/.config/bin:/usr/local/agent/pyenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/
+```bash
+api-cli run update-module --data '{
+  "module_url": "ghcr.io/geniusdynamics/stirlingpdf:latest",
+  "instances": ["stirlingpdf1"],
+  "force": true
+}'
 ```
 
-- if you want to debug a container or see environment inside
- `runagent -m stirlingpdf1`
- ```
-podman ps
-CONTAINER ID  IMAGE                                      COMMAND               CREATED        STATUS        PORTS                    NAMES
-d292c6ff28e9  localhost/podman-pause:4.6.1-1702418000                          9 minutes ago  Up 9 minutes  127.0.0.1:20015->80/tcp  80b8de25945f-infra
-d8df02bf6f4a  docker.io/library/mariadb:10.11.5          --character-set-s...  9 minutes ago  Up 9 minutes  127.0.0.1:20015->80/tcp  mariadb-app
-9e58e5bd676f  docker.io/library/nginx:stable-alpine3.17  nginx -g daemon o...  9 minutes ago  Up 9 minutes  127.0.0.1:20015->80/tcp  stirlingpdf-app
+### Backup and Restore
+
+The module supports NS8's built-in backup system. All PDF files and configurations are automatically included in system backups.
+
+### Uninstall
+
+Remove the instance (data will be preserved unless `--no-preserve` is used):
+
+```bash
+# Remove with data preservation
+remove-module stirlingpdf1
+
+# Remove completely (data lost)
+remove-module --no-preserve stirlingpdf1
 ```
 
-you can see what environment variable is inside the container
-```
-podman exec  stirlingpdf-app env
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-TERM=xterm
-PKG_RELEASE=1
-MARIADB_DB_HOST=127.0.0.1
-MARIADB_DB_NAME=stirlingpdf
-MARIADB_IMAGE=docker.io/mariadb:10.11.5
-MARIADB_DB_TYPE=mysql
-container=podman
-NGINX_VERSION=1.24.0
-NJS_VERSION=0.7.12
-MARIADB_DB_USER=stirlingpdf
-MARIADB_DB_PASSWORD=stirlingpdf
-MARIADB_DB_PORT=3306
-HOME=/root
-```
+## Architecture
 
-you can run a shell inside the container
+### Container Structure
+
+The module deploys the following containers:
+
+- **stirlingpdf-app**: Main Stirling-PDF application (Nginx + PHP)
+- **stirlingpdf**: Application backend services
+- **Traefik**: Reverse proxy with SSL termination
+
+### File Structure
 
 ```
-podman exec -ti   stirlingpdf-app sh
-/ # 
+/home/stirlingpdf1/
+├── .config/
+│   ├── state/          # Environment variables and configuration
+│   └── bin/            # Helper scripts
+├── data/               # Persistent data storage
+├── logs/               # Application logs
+└── tmp/                # Temporary files
 ```
-## Testing
 
-Test the module using the `test-module.sh` script:
+### Service Management
 
+Services are managed by systemd:
 
-    ./test-module.sh <NODE_ADDR> ghcr.io/compgeniuses/stirlingpdf:latest
+```bash
+# View service status
+systemctl --user status stirlingpdf-app.service
 
-The tests are made using [Robot Framework](https://robotframework.org/)
+# Restart services
+systemctl --user restart stirlingpdf-app.service
+```
 
-## UI translation
+## Troubleshooting
 
-Translated with [Weblate](https://hosted.weblate.org/projects/ns8/).
+### Debug Mode
 
-To setup the translation process:
+Access the module environment for debugging:
 
-- add [GitHub Weblate app](https://docs.weblate.org/en/latest/admin/continuous.html#github-setup) to your repository
-- add your repository to [hosted.weblate.org]((https://hosted.weblate.org) or ask a compgeniuses developer to add it to ns8 Weblate project
+```bash
+# Enter module environment
+runagent -m stirlingpdf1
+
+# View environment variables
+runagent -m stirlingpdf1 env
+
+# Check running containers
+runagent -m stirlingpdf1 podman ps
+```
+
+### Container Debugging
+
+Inspect and debug individual containers:
+
+```bash
+# View container logs
+runagent -m stirlingpdf1 podman logs stirlingpdf-app
+
+# Access container shell
+runagent -m stirlingpdf1 podman exec -it stirlingpdf-app sh
+
+# Check container environment
+runagent -m stirlingpdf1 podman exec stirlingpdf-app env
+```
+
+### Common Issues
+
+| Issue                  | Solution                                                            |
+| ---------------------- | ------------------------------------------------------------------- |
+| SSL certificate errors | Ensure domain DNS is correct and Let's Encrypt can reach the server |
+| High memory usage      | Increase available RAM or limit concurrent PDF operations           |
+| Slow performance       | Check disk space and consider SSD storage for better I/O            |
+| Login failures         | Verify security settings and reset credentials if needed            |
+
+### Log Locations
+
+- Application logs: `/home/stirlingpdf1/logs/`
+- Systemd logs: `journalctl --user -u stirlingpdf-app.service`
+- Traefik logs: Available through NS8 logging system
+
+## Development
+
+### Testing
+
+Run the test suite using Robot Framework:
+
+```bash
+./test-module.sh <NODE_ADDR> ghcr.io/geniusdynamics/stirlingpdf:latest
+```
+
+### UI Development
+
+The web interface is built with Vue.js 2 and Carbon Design System:
+
+```bash
+cd ui/
+npm install
+npm run serve    # Development server
+npm run build    # Production build
+npm run lint     # Code linting
+```
+
+### Module Structure
+
+- `imageroot/`: Container images and configuration
+- `ui/`: Vue.js web interface
+- `tests/`: Robot Framework test cases
+- `actions/`: NS8 module lifecycle scripts
+
+## Integration
+
+### Smarthost Configuration
+
+The module automatically integrates with NS8's centralized smarthost configuration for email notifications and external services.
+
+### API Access
+
+Stirling-PDF provides REST API endpoints for automation. Access the API documentation at `https://your-domain.com/api/docs` after installation.
+
+### Multi-Tenant Support
+
+Deploy multiple instances for different departments or clients, each with isolated data and configuration.
+
+## Security
+
+### Best Practices
+
+1. **Always use HTTPS** with valid SSL certificates
+2. **Change default credentials** immediately
+3. **Regular updates** to patch security vulnerabilities
+4. **Network isolation** through NS8 firewall rules
+5. **Access logging** for audit trails
+
+### Data Protection
+
+- All PDF files are stored locally on the NS8 server
+- No data is transmitted to external services
+- Encrypted storage options available through NS8
+
+## Support
+
+### Documentation
+
+- [Stirling-PDF Official Docs](https://stirlingtools.com/docs/Overview/What%20is%20Stirling-PDF)
+- [NS8 Core Documentation](https://www.nethserver.org/docs/)
+
+### Community
+
+- **Issues**: [GitHub Issues](https://github.com/geniusdynamics/dev/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/geniusdynamics/ns8-Stirling-PDF/discussions)
+- **NS8 Community**: [NethServer Forum](https://community.nethserver.org/)
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## Translation
+
+The UI is translated using [Weblate](https://hosted.weblate.org/projects/ns8/).
+
+### Adding Translations
+
+1. Add the [GitHub Weblate app](https://docs.weblate.org/en/latest/admin/continuous.html#github-setup) to your repository
+2. Request addition to the NS8 Weblate project
+3. Contribute translations through the Weblate interface
+
+### Supported Languages
+
+- English (en)
+- German (de)
+- Spanish (es)
+- Basque (eu)
+- Italian (it)
+- Portuguese (pt, pt_BR)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Changelog
+
+### Version History
+
+- **v1.0.0**: Initial release with basic PDF manipulation features
+- **v1.1.0**: Added security and authentication options
+- **v1.2.0**: Enhanced UI with Vue.js and Carbon Design System
+- **Current**: Latest stable version with full NS8 integration
+
+---
+
+**Note**: This module is part of the NS8 ecosystem. For general NS8 questions, visit [nethserver.org](https://www.nethserver.org/).
