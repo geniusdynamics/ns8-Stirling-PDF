@@ -15,7 +15,7 @@ repobase="${REPOBASE:-ghcr.io/geniusdynamics}"
 # Configure the image name
 reponame="stirlingpdf"
 
-SPDF_TAG="2.0.2"
+SPDF_TAG="2.1.1"
 
 # Create a new empty container image
 container=$(buildah from scratch)
