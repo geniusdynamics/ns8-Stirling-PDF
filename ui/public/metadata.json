@@ -1,9 +1,12 @@
 {
   "name": "Stirling-PDF",
   "description": {
-    "en": "Your locally hosted one-stop-shop for all your PDF needs.."
+    "en": "Stirling PDF is a self-hosted toolbox to merge, split, convert, sign and edit PDF files from your browser.",
+    "it": "Stirling PDF è una cassetta degli attrezzi self-hosted per unire, dividere, convertire, firmare e modificare file PDF dal browser."
   },
-  "categories": ["collaboration"],
+  "categories": [
+    "collaboration"
+  ],
   "authors": [
     {
       "name": "Martin Bhuong",
