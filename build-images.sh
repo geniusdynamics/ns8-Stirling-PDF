@@ -14,8 +14,12 @@ images=()
 repobase="${REPOBASE:-ghcr.io/geniusdynamics}"
 # Configure the image name
 reponame="stirlingpdf"
+# Node.js 25+ no longer ships Corepack, install it from npm
+# renovate: datasource=npm packageName=corepack
+corepack_version=0.36.0
 
-SPDF_TAG="2.1.1"
+# renovate: datasource=docker packageName=docker.io/stirlingtools/stirling-pdf
+SPDF_VERSION=2.14.3
 
 # Create a new empty container image
 container=$(buildah from scratch)
@@ -23,7 +27,8 @@ container=$(buildah from scratch)
 # Reuse existing nodebuilder-stirlingpdf container, to speed up builds
 if ! buildah containers --format "{{.ContainerName}}" | grep -q nodebuilder-stirlingpdf; then
 	echo "Pulling NodeJS runtime..."
-	buildah from --name nodebuilder-stirlingpdf -v "${PWD}:/usr/src:Z" docker.io/library/node:lts
+	buildah from --name nodebuilder-stirlingpdf -v "${PWD}:/usr/src:Z" docker.io/library/node:26.13.0-slim
+	buildah run nodebuilder-stirlingpdf sh -c "npm install -g corepack@${corepack_version} && corepack enable"
 fi
 
 echo "Build static UI files with node..."
@@ -47,7 +52,8 @@ buildah config --entrypoint=/ \
 	--label="org.nethserver.authorizations=traefik@node:routeadm" \
 	--label="org.nethserver.tcp-ports-demand=1" \
 	--label="org.nethserver.rootfull=0" \
-	--label="org.nethserver.images=docker.io/stirlingtools/stirling-pdf:${SPDF_TAG}" \
+    --label="org.nethserver.min-core=3.0.0" \
+	--label="org.nethserver.images=docker.io/stirlingtools/stirling-pdf:${SPDF_VERSION}" \
 	"${container}"
 # Commit the image
 buildah commit "${container}" "${repobase}/${reponame}"
