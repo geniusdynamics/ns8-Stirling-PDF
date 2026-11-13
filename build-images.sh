@@ -18,7 +18,7 @@ reponame="stirlingpdf"
 # renovate: datasource=npm packageName=corepack
 corepack_version=0.36.0
 
-SPDF_TAG="2.1.1"
+SPDF_TAG="2.14.3"
 
 # Create a new empty container image
 container=$(buildah from scratch)
